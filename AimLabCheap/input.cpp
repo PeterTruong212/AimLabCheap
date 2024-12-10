@@ -9,8 +9,6 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
     }
 
     if (showMenu) {
-        // Kiểm tra xem người dùng có nhấn chuột vào các tùy chọn trong menu không
-        // (ImGui sẽ xử lý việc này cho chúng ta)
         return;
     }
 

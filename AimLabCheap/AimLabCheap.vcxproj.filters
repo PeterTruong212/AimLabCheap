@@ -54,6 +54,15 @@
     <ClCompile Include="sphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="crosshair.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ground.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="jack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere_vertex_shader.txt" />
@@ -62,6 +71,8 @@
     <Text Include="crosshair_fragment_shader.txt" />
     <Text Include="ground_vertex_shader.txt" />
     <Text Include="ground_fragment_shader.txt" />
+    <Text Include="jack_vertex.txt" />
+    <Text Include="jack_fragment.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_loader.h">
@@ -104,6 +115,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="crosshair.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ground.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="jack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

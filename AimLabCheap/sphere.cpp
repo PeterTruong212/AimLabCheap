@@ -1,5 +1,11 @@
 ﻿#include "sphere.h"
 
+Sphere::~Sphere() {
+    glDeleteVertexArrays(1, &VAO); 
+    glDeleteBuffers(1, &VBO); 
+    glDeleteBuffers(1, &EBO); 
+}
+
 // Tạo hình cầu
 void Sphere::createSphere(std::vector<float>& vertices, std::vector<unsigned int>& indices, float radius, int sectorCount, int stackCount) {
     const float M_PI = 3.14159265358979323846;
@@ -107,4 +113,24 @@ void Sphere::Init(const char* vertexShaderPath, const char* fragmentShaderPath) 
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+}
+
+// Vẽ hình cầu
+void Sphere::Draw(glm::mat4 projection, glm::mat4 view, glm::vec3 lightPos, glm::vec3 viewPos) {
+    glUseProgram(shaderProgram);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, center); // Dịch chuyển đến vị trí center
+    model = glm::scale(model, glm::vec3(radius)); // Scale hình cầu 
+
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+    // Truyền giá trị ánh sáng vào shader
+    glUniform3fv(glGetUniformLocation(shaderProgram, "lightPos"), 1, glm::value_ptr(lightPos));
+    glUniform3fv(glGetUniformLocation(shaderProgram, "viewPos"), 1, glm::value_ptr(viewPos));
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, 36 * 18 * 6, GL_UNSIGNED_INT, 0);
 }

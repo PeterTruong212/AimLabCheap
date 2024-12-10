@@ -13,32 +13,18 @@
 
 class Sphere {
 public:
-    // Khởi tạo hình cầu
+    ~Sphere();
     void Init(const char* vertexShaderPath, const char* fragmentShaderPath);
-
-    // Vẽ hình cầu
     void Draw(glm::mat4 projection, glm::mat4 view, glm::vec3 lightPos, glm::vec3 viewPos);
-
-    // Lấy vị trí tâm của hình cầu
     glm::vec3 GetCenter() const { return center; }
-
-    // Thiết lập vị trí tâm của hình cầu
     void SetCenter(const glm::vec3& newCenter) { center = newCenter; }
-
-    // Lấy bán kính của hình cầu
     float GetRadius() const { return radius; }
-
-    // Kiểm tra trạng thái hit của hình cầu
     bool IsHit() const { return hit; }
-
-    // Thiết lập trạng thái hit của hình cầu
     void SetHit(bool value) { hit = value; }
-
-    // Thiết lập bán kính của hình cầu
     void SetRadius(float newRadius) { radius = newRadius; }
 
 private:
-    // Tạo hình cầu (private helper function)
+
     void createSphere(std::vector<float>& vertices, std::vector<unsigned int>& indices, float radius, int sectorCount, int stackCount);
 
     GLuint shaderProgram;
