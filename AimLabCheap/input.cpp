@@ -57,4 +57,45 @@ void processInput(GLFWwindow* window) {
     if (shouldExit) {
         glfwSetWindowShouldClose(window, true);
     }
+
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+        isDashing = true;
+        dashStartTime = glfwGetTime(); // Sử dụng biến float dashStartTime để lưu thời điểm
+    }
+
+    if (isDashing) {
+        float dashDuration = 0.02f; // Khoảng thời gian lướt (giây)
+        float dashDistance = 3.0f; // Khoảng cách lướt
+        glm::vec3 dashDirection = glm::vec3(0.0f);
+
+        // Xác định hướng lướt dựa trên phím WASD
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            dashDirection += cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            dashDirection -= cameraFront;
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            dashDirection -= glm::normalize(glm::cross(cameraFront, cameraUp));
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            dashDirection += glm::normalize(glm::cross(cameraFront, cameraUp));
+        }
+
+        // Nếu không nhấn phím WASD, lướt theo hướng camera
+        if (dashDirection == glm::vec3(0.0f)) {
+            dashDirection = cameraFront;
+        }
+
+        // Loại bỏ thành phần y và chuẩn hóa vector
+        dashDirection = glm::normalize(glm::vec3(dashDirection.x, 0.0f, dashDirection.z));
+
+        float elapsedTime = glfwGetTime() - dashStartTime;
+        if (elapsedTime < dashDuration) {
+            cameraPos += dashDirection * dashDistance * deltaTime / dashDuration;
+        }
+        else {
+            isDashing = false;
+        }
+    }
 }

@@ -63,6 +63,9 @@
     <ClCompile Include="jack.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="obstacle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere_vertex_shader.txt" />
@@ -73,6 +76,8 @@
     <Text Include="ground_fragment_shader.txt" />
     <Text Include="jack_vertex.txt" />
     <Text Include="jack_fragment.txt" />
+    <Text Include="obstacle_fragment_shader.txt" />
+    <Text Include="obstacle_vertex_shader.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader_loader.h">
@@ -124,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="jack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="obstacle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

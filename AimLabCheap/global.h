@@ -28,4 +28,7 @@ extern float sphereRadius;
 extern int score;
 extern int shotsFired;
 
+extern bool isDashing;
+extern float dashStartTime;
+
 #endif // GLOBALS_H

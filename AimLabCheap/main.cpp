@@ -22,6 +22,7 @@
 #include "crosshair.h"
 #include "ground.h"
 #include "jack.h"
+#include "obstacle.h"
 
 // Hàm hiển thị menu
 void drawMenu() {
@@ -40,7 +41,8 @@ void drawMenu() {
     ImGui::End();
 }
 
-const int NUM_SPHERES = 10;
+const int NUM_SPHERES = 5;
+const int NUM_OBSTACLES = 10;
 
 // Định nghĩa vùng không gian cố định
 const glm::vec3 regionCenter(0.0f, 0.0f, -50.0f); // Tâm của vùng
@@ -53,11 +55,34 @@ const float maxSize = 1.0f;
 
 // Mảng lưu trữ các khối cầu
 Sphere spheres[NUM_SPHERES];
+// Vector lưu trữ các khối hộp
+std::vector<Obstacle> obstacles;
+
+bool checkSphereObstacleOverlap(const Sphere& sphere, const Obstacle& obstacle) {
+    // Tìm điểm gần nhất trên khối hộp đến tâm hình cầu
+    glm::vec3 closestPoint = glm::max(obstacle.position - obstacle.size / 2.0f, glm::min(sphere.GetCenter(), obstacle.position + obstacle.size / 2.0f));
+
+    // Tính khoảng cách từ tâm hình cầu đến điểm gần nhất
+    float distance = glm::distance(sphere.GetCenter(), closestPoint);
+
+    return distance < sphere.GetRadius();
+}
 
 // Hàm kiểm tra xem hai hình cầu có chồng chéo lên nhau không
 bool checkSphereOverlap(const Sphere& sphere1, const Sphere& sphere2) {
     float distance = glm::distance(sphere1.GetCenter(), sphere2.GetCenter());
     return distance < sphere1.GetRadius() + sphere2.GetRadius(); 
+}
+
+// Hàm kiểm tra va chạm giữa hai khối hộp (bạn cần tự viết)
+bool checkObstacleOverlap(const Obstacle& obstacle1, const Obstacle& obstacle2) {
+    // Kiểm tra xem các khối hộp có giao nhau trên mỗi trục tọa độ
+    bool overlapX = std::abs(obstacle1.position.x - obstacle2.position.x) < (obstacle1.size.x + obstacle2.size.x) / 2.0f;
+    bool overlapY = std::abs(obstacle1.position.y - obstacle2.position.y) < (obstacle1.size.y + obstacle2.size.y) / 2.0f;
+    bool overlapZ = std::abs(obstacle1.position.z - obstacle2.position.z) < (obstacle1.size.z + obstacle2.size.z) / 2.0f;
+
+    // Nếu các khối hộp giao nhau trên cả ba trục tọa độ, chúng chồng lên nhau
+    return overlapX && overlapY && overlapZ;
 }
 
 // Hàm tạo khối cầu ngẫu nhiên trong vùng cố định
@@ -88,10 +113,53 @@ void createRandomSphere(Sphere& sphere) {
                 break;
             }
         }
+
+        for (const Obstacle& obstacle : obstacles) {
+            if (checkSphereObstacleOverlap(sphere, obstacle)) {
+                overlap = true;
+                break;
+            }
+        }
     } while (overlap);
 
     // Thiết lập trạng thái hit cho hình cầu (chưa bị bắn trúng)
     sphere.SetHit(false);
+}
+
+void createRandomObstacle(Obstacle& obstacle, int i) {
+    glm::vec3 size(20.0f, 10.0f, 1.0f); // Kích thước khối hộp
+    glm::vec3 color(0.0f, 0.0f, 1.0f); // Màu xanh dương
+
+    // Tính toán vị trí cho từng khối hộp
+    switch (i) {
+    case 0: // Phía trước, góc trái
+        obstacle.position = glm::vec3(-20.0f, 5.0f, -35.0f);
+        obstacle.size = size;
+        break;
+    case 1: // Phía trước, góc phải
+        obstacle.position = glm::vec3(10.0f, 15.0f, -35.0f);
+        obstacle.size = size;
+        break;
+    case 2: // Phía sau, góc trái
+        obstacle.position = glm::vec3(-20.0f, 5.0f, -66.0f);
+        obstacle.size = size;
+        break;
+    case 3: // Phía sau, góc phải
+        obstacle.position = glm::vec3(10.0f, 15.0f, -66.0f);
+        obstacle.size = size;
+        break;
+    case 4: // Bên trái, giữa
+        obstacle.position = glm::vec3(-26.0f, 10.0f, -50.0f);
+        obstacle.size = glm::vec3(1.0f, size.y, 20.0f); 
+        break;
+    case 5: // Bên phải, giữa
+        obstacle.position = glm::vec3(26.0f, 10.0f, -50.0f);
+        obstacle.size = glm::vec3(1.0f, size.y, 20.0f); 
+        break;
+        // Thêm các case khác nếu bạn muốn tạo thêm khối hộp
+    }
+
+    obstacle.color = color;
 }
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
@@ -174,6 +242,12 @@ int main() {
         createRandomSphere(spheres[i]);
     }
 
+    obstacles.resize(6); // Đảm bảo kích thước của vector obstacles là 6
+    for (int i = 0; i < obstacles.size(); ++i) {
+        obstacles[i].Init("obstacle_vertex_shader.txt", "obstacle_fragment_shader.txt");
+        createRandomObstacle(obstacles[i], i); // Gọi hàm với tham số i
+    }
+
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -213,6 +287,10 @@ int main() {
                 createRandomSphere(spheres[i]); // Tạo lại khối cầu mới nếu bị bắn trúng
             }
         }
+
+        for (Obstacle& obstacle : obstacles) { 
+            obstacle.Draw(projection, view, lightPos, cameraPos); 
+        } 
 
         // Vẽ crosshair
         crosshair.Draw();

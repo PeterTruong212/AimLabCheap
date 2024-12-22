@@ -23,3 +23,6 @@ float sphereRadius = 1.0f;
 
 int score = 0;
 int shotsFired = 0;
+
+bool isDashing = false;
+float dashStartTime = 0.0f;

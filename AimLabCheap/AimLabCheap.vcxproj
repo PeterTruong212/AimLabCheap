@@ -32,6 +32,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="jack.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="shader_loader.cpp" />
     <ClCompile Include="sphere.cpp" />
   </ItemGroup>
@@ -42,6 +43,8 @@
     <Text Include="ground_vertex_shader.txt" />
     <Text Include="jack_fragment.txt" />
     <Text Include="jack_vertex.txt" />
+    <Text Include="obstacle_fragment_shader.txt" />
+    <Text Include="obstacle_vertex_shader.txt" />
     <Text Include="sphere_fragment_shader.txt" />
     <Text Include="sphere_vertex_shader.txt" />
   </ItemGroup>
@@ -61,6 +64,7 @@
     <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="crosshair.h" />
     <ClInclude Include="jack.h" />
+    <ClInclude Include="obstacle.h" />
     <ClInclude Include="shader_loader.h" />
     <ClInclude Include="sphere.h" />
   </ItemGroup>
